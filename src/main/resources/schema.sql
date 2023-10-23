@@ -7,7 +7,7 @@
 create table website_user (
  user_id bigint NOT NULL auto_increment,
  user_fname VARCHAR(255) NOT NULL,
- user_mname VARCHAR(255) DEFAULT NULL,
+-- user_mname VARCHAR(255) DEFAULT NULL,
  user_lname VARCHAR(255) DEFAULT NULL,
  user_phone_number VARCHAR(20) NOT NULL,
  user_email_id VARCHAR(50) NOT NULL,
