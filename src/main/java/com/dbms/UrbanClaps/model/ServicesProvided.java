@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 
 public class ServicesProvided {
-    private Integer id;
-    private String serviceName;
-    private Integer servicePrice;
-    private String serviceDes;
-    private String serviceCategory;
+    private Long id;
+    private String name;
+    private Long price;
+    private String description;
+    private String category;
 }

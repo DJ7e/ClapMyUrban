@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Component
 public class ServicesProvidedDaoImpl implements ServicesProvidedDao {
@@ -19,29 +20,52 @@ public class ServicesProvidedDaoImpl implements ServicesProvidedDao {
 
     @Override
     public String createService(ServicesProvided servicesProvided){
-//        jdbcTemplate.update(
-//                "INSERT INTO service VALUES (?,?,?,?,?)",
-////                new ServicesRowMapper(),
-//                servicesProvided.getId(),
-//                servicesProvided.getServiceName(),
-//                servicesProvided.getServicePrice(),
-//                servicesProvided.getServiceDes(),
-//                servicesProvided.getServiceCategory()
-//        );
+        jdbcTemplate.update(
+                "INSERT INTO service VALUES (?,?,?,?,?)",
+//                new ServicesRowMapper(),
+                servicesProvided.getId(),
+                servicesProvided.getName(),
+                servicesProvided.getPrice(),
+                servicesProvided.getDescription(),
+                servicesProvided.getCategory()
+        );
         return "Hello";
+    }
+
+    @Override
+    public List<ServicesProvided> findAllServices(){
+        List<ServicesProvided> result  = jdbcTemplate.query(
+                "SELECT service_id,service_name,service_price,service_description,service_category FROM service",
+                new ServicesRowMapper()
+        );
+        return result;
+    }
+
+    @Override
+    public List<ServicesProvided> findServicesByCategory(String category) {
+        List<ServicesProvided> result  = jdbcTemplate.query(
+                "SELECT s.service_id,s.service_name,s.service_price,s.service_description,s.service_category FROM service s,category c WHERE s.service_id = c.category_id AND c.category_name = ?",
+                new ServicesRowMapper(),
+                (String)category
+        );
+        System.out.println(category);
+        return result;
     }
 
     public static class ServicesRowMapper implements RowMapper<ServicesProvided> {
         @Override
         public ServicesProvided mapRow(ResultSet rs, int rowNum) throws SQLException {
             return ServicesProvided.builder()
-                    .id(rs.getInt("id"))
-                    .serviceName(rs.getString("service_name"))
-                    .servicePrice(rs.getInt("service_price"))
-                    .serviceDes(rs.getString("service_des"))
-                    .serviceCategory(rs.getString("service_category"))
+                    .id(rs.getLong("service_id"))
+                    .name(rs.getString("service_name"))
+                    .price(rs.getLong("service_price"))
+                    .description(rs.getString("service_description"))
+                    .category(rs.getString("service_category"))
                     .build();
         }
     }
+
+
+
 
 }
