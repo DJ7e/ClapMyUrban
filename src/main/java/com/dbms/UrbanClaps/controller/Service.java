@@ -6,10 +6,7 @@ import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -19,8 +16,16 @@ public class Service {
     @Autowired
     ServicesProvidedDao servicesProvidedDao;
     @PostMapping("addservice")
-    public String serviceToAdd(@RequestParam ServicesProvided servicesProvided){
-        return servicesProvidedDao.createService(servicesProvided);
+    public String serviceToAdd(@RequestBody ServicesProvided ser){
+        ServicesProvided obj = ServicesProvided.builder()
+                .id(ser.getId())
+                .serviceName(ser.getServiceName())
+                .serviceCategory(ser.getServiceCategory())
+                .serviceDes(ser.getServiceDes())
+                .servicePrice(ser.getServicePrice())
+                .build();
+        System.out.println(obj.toString());
+        return servicesProvidedDao.createService(obj);
     }
 
 }
