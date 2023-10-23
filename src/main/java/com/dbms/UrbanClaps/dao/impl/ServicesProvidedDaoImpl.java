@@ -22,7 +22,6 @@ public class ServicesProvidedDaoImpl implements ServicesProvidedDao {
     public String createService(ServicesProvided servicesProvided){
         jdbcTemplate.update(
                 "INSERT INTO service VALUES (?,?,?,?,?)",
-//                new ServicesRowMapper(),
                 servicesProvided.getId(),
                 servicesProvided.getName(),
                 servicesProvided.getPrice(),

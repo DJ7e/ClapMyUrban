@@ -15,4 +15,8 @@ public interface ServicesProvidedDao {
     List<ServicesProvided> findAllServices();
 
     List<ServicesProvided> findServicesByCategory(String category);
+
+    List<ServicesProvided> findServicesByProvider(Long providerId);
+
+
 }
