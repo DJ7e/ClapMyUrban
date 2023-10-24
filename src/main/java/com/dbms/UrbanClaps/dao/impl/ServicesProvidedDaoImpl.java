@@ -51,6 +51,25 @@ public class ServicesProvidedDaoImpl implements ServicesProvidedDao {
         return result;
     }
 
+    @Override
+    public List<ServicesProvided> findServicesByName(String name) {
+        List<ServicesProvided> result  = jdbcTemplate.query(
+                "SELECT service_id,service_name,service_price,service_description,service_category FROM service WHERE service_name = ?",
+                new ServicesRowMapper(),
+                name
+        );
+        return result;
+    }
+
+    @Override
+    public String changeName(Long id, String name) {
+//        jdbcTemplate.update(
+//                "UPDATE service SET  "
+//        )
+        return "BHag";
+    }
+
+
     public static class ServicesRowMapper implements RowMapper<ServicesProvided> {
         @Override
         public ServicesProvided mapRow(ResultSet rs, int rowNum) throws SQLException {

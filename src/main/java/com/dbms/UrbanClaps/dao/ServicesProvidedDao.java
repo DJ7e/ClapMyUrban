@@ -3,7 +3,6 @@ package com.dbms.UrbanClaps.dao;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -16,7 +15,8 @@ public interface ServicesProvidedDao {
 
     List<ServicesProvided> findServicesByCategory(String category);
 
-    List<ServicesProvided> findServicesByProvider(Long providerId);
+    List<ServicesProvided> findServicesByName(String name);
 
 
+    String changeName(Long id, String name);
 }
