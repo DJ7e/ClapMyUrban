@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Slot {
-    private Long slot_id;
+    private Long id;
+    private String time;
 }

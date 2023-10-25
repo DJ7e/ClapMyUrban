@@ -19,7 +19,7 @@ public class SignUpUserController {
         return "Ye faltu hai";
     }
 
-    @PostMapping("user")
+    @PostMapping("users")
     public ResponseEntity<String> addUser(@RequestBody User user){
         User obj = User.builder()
                 .userId(user.getUserId())

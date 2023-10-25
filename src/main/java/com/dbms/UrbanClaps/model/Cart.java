@@ -6,7 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Cart {
-
+    private Long cart_id;
+    private Long cart_order;
 
 }
