@@ -28,7 +28,7 @@ public class ServiceProvider {
         private String accountNo;
         private String IFSC;
         private Long manager;
-        private Long service;
+        private Long category;
 
 
 

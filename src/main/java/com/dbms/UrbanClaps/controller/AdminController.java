@@ -26,7 +26,7 @@ public class AdminController {
     @Autowired
     ServiceProviderDao serviceProviderDao;
 
-    @GetMapping("/allUsers")
+    @GetMapping("allUsers")
     public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String name){
         try {
             List<User> providers = new ArrayList<User>();

@@ -37,7 +37,7 @@ public class SignUpProviderController {
                 .accountNo(sp.getAccountNo())
                 .IFSC(sp.getIFSC())
                 .manager(sp.getManager())
-                .service(sp.getService())
+                .category(sp.getCategory())
                 .build();
         System.out.println(obj.toString());
         return serviceProviderDao.createProvider(obj);

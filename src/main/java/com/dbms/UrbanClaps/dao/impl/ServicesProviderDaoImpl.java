@@ -22,15 +22,14 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
     @Override
     public List<ServicesProvided> findServicesOfferedByProvider(Long providerId) {
         List<ServicesProvided> result  = jdbcTemplate.query(
-                "    SELECT s.service_id,s.service_name,s.service_price,s.service_description,s.service_category \n" +
-                        "    FROM service s,service_provider p \n" +
-                        "    WHERE AND s.service_id = p.provider_service AND p.provider_id = ?",
+                "SELECT s.service_id,s.service_name,s.service_price,s.service_description,s.service_category \n" +
+                        "FROM service s,category c,service_provider p\n" +
+                        "WHERE s.service_category = c.category_service AND p.provider_category = c.category_id AND p.provider_id = ?",
                 new ServicesProvidedDaoImpl.ServicesRowMapper(),
                 providerId
         );
         System.out.println(providerId);
         return result;
-
     }
 
     @Override
@@ -45,8 +44,8 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
     @Override
     public ResponseEntity<String> createProvider(ServiceProvider obj) {
         jdbcTemplate.update(
-                "INSERT INTO service_provider VALUE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                obj.getId(),
+                "INSERT INTO service_provider (provider_fname, provider_lname, provider_phone_number, provider_email_id, provider_password, provider_address, provider_description, provider_photo, provider_aadhar_number, provider_aadhar_verification, provider_account_number, provider_IFSC, provider_manager, provider_category)\n" +
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 obj.getFirstName(),
                 obj.getMiddleName(),
                 obj.getLastName(),
@@ -61,7 +60,7 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
                 obj.getAccountNo(),
                 obj.getIFSC(),
                 obj.getManager(),
-                obj.getService()
+                obj.getCategory()
         );
         return new ResponseEntity<>("You are in", HttpStatus.CREATED);
     }
@@ -85,7 +84,7 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
                     .accountNo(rs.getString("provider_account_number"))
                     .IFSC(rs.getString("provider_IFSC"))
                     .manager(rs.getLong("provider_manager"))
-                    .service(rs.getLong("provider_service"))
+                    .category(rs.getLong("provider_category"))
                     .build();
         }
     }}
