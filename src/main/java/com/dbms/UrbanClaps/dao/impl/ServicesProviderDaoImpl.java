@@ -12,13 +12,18 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Component
 public class ServicesProviderDaoImpl implements ServiceProviderDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    ServiceProviderDao serviceProviderDao;
+
     @Override
     public List<ServicesProvided> findServicesOfferedByProvider(Long providerId) {
         List<ServicesProvided> result  = jdbcTemplate.query(
@@ -37,6 +42,16 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
         List<ServiceProvider> result = jdbcTemplate.query(
                 "SELECT * FROM service_provider p",
                 new ServiceProviderRowMapper()
+        );
+        return result;
+    }
+
+    @Override
+    public List<ServiceProvider> getProviderByID(Long id) {
+        List<ServiceProvider> result = jdbcTemplate.query(
+                "SELECT * FROM service_provider p WHERE p.provider_id = ?",
+                new ServiceProviderRowMapper(),
+                id
         );
         return result;
     }
@@ -63,6 +78,27 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
                 obj.getCategory()
         );
         return new ResponseEntity<>("You are in", HttpStatus.CREATED);
+    }
+
+    @Override
+    public List<ServiceProvider> updateVerifyStatus(Long id) {
+        jdbcTemplate.update(
+                "UPDATE service_provider\n" +
+                        "SET provider_aadhar_verification = 'Verified' " +
+                        "WHERE provider_id = ?",
+                id
+        );
+        List<ServiceProvider> result = jdbcTemplate.query(
+                "SELECT * FROM service_provider p WHERE p.provider_id = ?",
+                new ServiceProviderRowMapper(),
+                id
+        );
+        return result;
+    }
+
+    @Override
+    public void editDetails(ServiceProvider serviceProvider) {
+
     }
 
     public static class ServiceProviderRowMapper implements RowMapper<ServiceProvider> {

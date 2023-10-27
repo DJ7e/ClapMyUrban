@@ -15,5 +15,11 @@ public interface ServiceProviderDao {
 
     List<ServiceProvider> getAllProviders();
 
+    List<ServiceProvider> getProviderByID(Long id);
+
     ResponseEntity<String> createProvider(ServiceProvider obj);
+
+    List<ServiceProvider> updateVerifyStatus(Long id);
+
+    void editDetails(ServiceProvider serviceProvider);
 }

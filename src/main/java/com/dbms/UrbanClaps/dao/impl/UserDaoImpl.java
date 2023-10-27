@@ -26,8 +26,7 @@ public class UserDaoImpl implements UserDao {
     public ResponseEntity<String> createUser(User obj) {
         try {
             jdbcTemplate.update(
-                    "INSERT INTO website_user VALUE (?,?,?,?,?,?,?,?,?)",
-                    obj.getUserId(),
+                    "INSERT INTO website_user(user_fname, user_mname, user_lname, user_phone_number, user_email_id, user_password, user_address, user_photo) VALUE (?,?,?,?,?,?,?,?)",
                     obj.getFirstName(),
                     obj.getMiddleName(),
                     obj.getLastName(),
