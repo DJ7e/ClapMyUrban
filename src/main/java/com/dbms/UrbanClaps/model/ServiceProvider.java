@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public class ServiceProvider {
         private String aadharNumber;
         private String aadharVerification;
         private String accountNo;
-        private String IFSC;
+        private String ifsc;
         private Long manager;
         private Long category;
 

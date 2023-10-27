@@ -2,24 +2,23 @@ package com.dbms.UrbanClaps.controller;
 
 import com.dbms.UrbanClaps.dao.ServiceProviderDao;
 import com.dbms.UrbanClaps.model.ServiceProvider;
-import com.dbms.UrbanClaps.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "signup/provider")
+@RequestMapping(path = "signup")
 public class SignUpProviderController {
 
     @Autowired
     ServiceProviderDao serviceProviderDao;
 
-    @GetMapping()
-    public String signupProviderPage(){
-        return "Ye faltu hai";
-    }
+//    @GetMapping()
+//    public String signupProviderPage(){
+//        return "Ye faltu hai";
+//    }
 
-    @PostMapping()
+    @PostMapping("provider")
     public ResponseEntity<String> addProvider(@RequestBody ServiceProvider sp){
         ServiceProvider obj = ServiceProvider.builder()
                 .id(sp.getId())
@@ -35,10 +34,11 @@ public class SignUpProviderController {
                 .aadharNumber(sp.getAadharNumber())
                 .aadharVerification(sp.getAadharVerification())
                 .accountNo(sp.getAccountNo())
-                .IFSC(sp.getIFSC())
+                .ifsc(sp.getIfsc())
                 .manager(sp.getManager())
                 .category(sp.getCategory())
                 .build();
+        System.out.println(sp.toString());
         System.out.println(obj.toString());
         return serviceProviderDao.createProvider(obj);
     }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,8 +57,13 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
 
     @Override
     public ResponseEntity<String> createProvider(ServiceProvider obj) {
+        System.out.println(obj.toString());
         jdbcTemplate.update(
-                "INSERT INTO service_provider (provider_fname, provider_lname, provider_phone_number, provider_email_id, provider_password, provider_address, provider_description, provider_photo, provider_aadhar_number, provider_aadhar_verification, provider_account_number, provider_IFSC, provider_manager, provider_category)\n" +
+                "INSERT INTO service_provider (provider_fname,provider_mname, provider_lname," +
+                        "provider_phone_number, provider_email_id, provider_password," +
+                        "provider_address, provider_description, provider_photo, " +
+                        "provider_aadhar_number, provider_aadhar_verification, provider_account_number," +
+                        " provider_IFSC, provider_manager, provider_category)\n" +
                         "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 obj.getFirstName(),
                 obj.getMiddleName(),
@@ -73,10 +77,11 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
                 obj.getAadharNumber(),
                 obj.getAadharVerification(),
                 obj.getAccountNo(),
-                obj.getIFSC(),
+                obj.getIfsc(),
                 obj.getManager(),
                 obj.getCategory()
         );
+
         return new ResponseEntity<>("You are in", HttpStatus.CREATED);
     }
 
@@ -118,7 +123,7 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
                     .aadharNumber(rs.getString("provider_aadhar_number"))
                     .aadharVerification(rs.getString("provider_aadhar_verification"))
                     .accountNo(rs.getString("provider_account_number"))
-                    .IFSC(rs.getString("provider_IFSC"))
+                    .ifsc(rs.getString("provider_IFSC"))
                     .manager(rs.getLong("provider_manager"))
                     .category(rs.getLong("provider_category"))
                     .build();
