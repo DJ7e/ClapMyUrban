@@ -28,9 +28,9 @@ public class CartController {
 //    Cart Content
 
     @GetMapping()
-    public ResponseEntity<List<Orders>> getCartContents(@RequestParam Long id) {
+    public ResponseEntity<List<Orders>> getCartContents(@RequestParam Long userid) {
         try {
-            List<Orders> result = orderDao.getOrders(id);
+            List<Orders> result = orderDao.getOrders(userid);
             if(result.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             else

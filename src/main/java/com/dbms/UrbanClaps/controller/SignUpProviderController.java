@@ -42,5 +42,5 @@ public class SignUpProviderController {
         System.out.println(obj.toString());
         return serviceProviderDao.createProvider(obj);
     }
-//afasf
+
 }

@@ -1,7 +1,9 @@
 package com.dbms.UrbanClaps.controller;
 
+import com.dbms.UrbanClaps.dao.ManagerDao;
 import com.dbms.UrbanClaps.dao.ServiceProviderDao;
 import com.dbms.UrbanClaps.dao.UserDao;
+import com.dbms.UrbanClaps.model.Manager;
 import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import com.dbms.UrbanClaps.model.User;
@@ -25,6 +27,9 @@ public class AdminController {
 
     @Autowired
     ServiceProviderDao serviceProviderDao;
+
+    @Autowired
+    ManagerDao managerDao;
 
     @GetMapping("allUsers")
     public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String name){
@@ -62,6 +67,22 @@ public class AdminController {
         }
     }
 
+
+    @GetMapping("allManager")
+    public ResponseEntity<List<Manager>> getAllManager(){
+        try{
+            List<Manager> managers = new ArrayList<Manager>();
+            managers.addAll(managerDao.getAllManager());
+
+            if (managers.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(managers,HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.toString());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

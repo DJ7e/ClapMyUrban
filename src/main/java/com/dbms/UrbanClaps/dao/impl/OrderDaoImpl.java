@@ -21,7 +21,9 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Orders> getOrders(Long id) {
         List<Orders> result = jdbcTemplate.query(
-                "SELECT o.order_id,o.order_booked_time,o.order_booked_date,o.order_status,o.order_slot FROM orders o,slot s WHERE o.order_slot = s.slot_id AND s.slot_user = ?",
+                "SELECT o.order_id,o.order_booked_time,o.order_booked_date,o.order_status,o.order_slot " +
+                        "FROM orders o,slot s " +
+                        "WHERE o.order_slot = s.slot_id AND s.slot_user = ?",
                 new OrderRowMapper(),
                 id
         );
