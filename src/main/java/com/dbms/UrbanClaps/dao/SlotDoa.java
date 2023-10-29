@@ -10,4 +10,6 @@ public interface SlotDoa {
     List<Long> findFreeProvidersGivenSlot(String date, String time, Long serviceid);
 
     Long createNewSlot(Slot slot);
+
+    List<Slot> getSlotByID(Long id);
 }

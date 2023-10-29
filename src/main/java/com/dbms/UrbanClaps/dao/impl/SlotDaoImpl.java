@@ -1,8 +1,10 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.SlotDoa;
+import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -51,6 +53,17 @@ public class SlotDaoImpl implements SlotDoa {
     }
 
     @Override
+    public List<Slot> getSlotByID(Long id) {
+        List<Slot> result = jdbcTemplate.query(
+                "SELECT * FROM slot WHERE slot_id = ?",
+                new SlotRowMapper(),
+                id
+        );
+        return result;
+
+    }
+
+    @Override
     public List<Long> findFreeProvidersGivenSlot(String date, String time, Long serviceid) {
         List<Long> result = jdbcTemplate.query("select T.id from \n" + "\t(select p1.id, count(s1.slot_time) as cnt\n" + "\tfrom (select provider_id as id from service_provider sp ,service sv where sv.service_id = ? && sv.service_category = sp.provider_category ) p1 left join \n" + "\t(select * from slot s2 where s2.slot_date = ? and s2.slot_time = ?) s1 on p1.id = s1.slot_provider\n" + "\tgroup by p1.id) as T\n" + "where cnt = 0 \n", new RowMapper<Long>() {
             @Override
@@ -67,5 +80,19 @@ public class SlotDaoImpl implements SlotDoa {
             return result;
         }
 
+    }
+
+    public static class SlotRowMapper implements RowMapper<Slot> {
+        @Override
+        public Slot mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return Slot.builder()
+                    .id(rs.getLong("slot_id"))
+                    .service(rs.getLong("slot_service"))
+                    .user(rs.getLong("slot_user"))
+                    .provider(rs.getLong("slot_provider"))
+                    .time(rs.getString("slot_time"))
+                    .date(rs.getString("slot_date"))
+                    .build();
+        }
     }
 }

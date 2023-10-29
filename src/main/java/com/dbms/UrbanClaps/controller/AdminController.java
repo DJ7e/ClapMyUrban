@@ -71,6 +71,7 @@ public class AdminController {
     @GetMapping("allManager")
     public ResponseEntity<List<Manager>> getAllManager(){
         try{
+
             List<Manager> managers = new ArrayList<Manager>();
             managers.addAll(managerDao.getAllManager());
 

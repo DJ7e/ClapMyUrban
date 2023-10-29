@@ -39,7 +39,7 @@ public class CartController {
         }
     }
 
-    @GetMapping("byuser")
+    @GetMapping("byprovider")
     public ResponseEntity<List<Orders>> getCartContentsByProviderId(@RequestParam Long providerId) {
         try {
             List<Orders> result = orderDao.getOrdersByProviderId(providerId);
