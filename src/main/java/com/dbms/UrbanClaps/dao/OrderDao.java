@@ -9,8 +9,14 @@ import java.util.List;
 @Repository
 public interface OrderDao {
 
-    List<Orders> getOrders(Long id);
+    List<Orders> getOrdersByUserId(Long id);
 
 
     int createOrder(Slot slot);
+
+    List<Orders> getOrdersByProviderId(Long providerId);
+
+    List<Orders> getOrderByOrderId(Long orderId);
+
+    int updateOrderStatus(Long id);
 }

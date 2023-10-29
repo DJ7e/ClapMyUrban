@@ -21,10 +21,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>io.jsonwebtoken</groupId>-->
 <!--			<artifactId>jjwt</artifactId>-->
@@ -40,6 +40,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 <!--		<dependency>-->
 <!--			<groupId>io.jsonwebtoken</groupId>-->
 <!--			<artifactId>jjwt-api</artifactId>-->
@@ -89,7 +90,12 @@
 			<artifactId>maven-artifact</artifactId>
 			<version>3.2.5</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.38</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

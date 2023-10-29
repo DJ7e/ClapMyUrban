@@ -4,6 +4,8 @@ import com.dbms.UrbanClaps.dao.OrderDao;
 import com.dbms.UrbanClaps.dao.ServicesProvidedDao;
 import com.dbms.UrbanClaps.dao.SlotDoa;
 import com.dbms.UrbanClaps.dao.UserDao;
+import com.dbms.UrbanClaps.model.Orders;
+import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,7 +68,30 @@ public class UserController {
         }
     }
 
+    @PatchMapping("{orderId}/done")
+    public ResponseEntity<String> updateOrderStatus(@PathVariable Long orderId) {
+        try {
+            if (orderId == null)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            List<Orders> check = orderDao.getOrderByOrderId(orderId);
+
+            if (check == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                int obj = orderDao.updateOrderStatus(orderId);
+//                System.out.println(obj.toString());
+                return new ResponseEntity<>("Updated Order Id - "+obj, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
+
+
+
 
 /*
     public int addCustomer(User user){

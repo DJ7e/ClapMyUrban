@@ -63,6 +63,17 @@ public class UserDaoImpl implements UserDao {
         return result;
     }
 
+    @Override
+    public User getUserByUsernameAKAEmailId(String username) {
+        List<User> result  = jdbcTemplate.query(
+                "SELECT * FROM website_user WHERE user_email_id = ?",
+                new UserRowMapper(),
+                username
+        );
+        return result.get(0);
+
+    }
+
     public static class UserRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
