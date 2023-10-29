@@ -1,5 +1,6 @@
 package com.dbms.UrbanClaps.dao;
 
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.Manager;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,6 @@ public interface ManagerDao {
 
 
     List<Manager> getAllManager();
+
+    List<LoginUser> getManagerCredentials(LoginUser loginUser);
 }

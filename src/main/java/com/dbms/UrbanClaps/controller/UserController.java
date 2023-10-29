@@ -1,9 +1,7 @@
 package com.dbms.UrbanClaps.controller;
 
-import com.dbms.UrbanClaps.dao.OrderDao;
-import com.dbms.UrbanClaps.dao.ServicesProvidedDao;
-import com.dbms.UrbanClaps.dao.SlotDoa;
-import com.dbms.UrbanClaps.dao.UserDao;
+import com.dbms.UrbanClaps.dao.*;
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.Orders;
 import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.Slot;
@@ -12,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +29,12 @@ public class UserController {
 
     @Autowired
     OrderDao orderDao;
+    @Autowired
+    ServiceProviderDao serviceProviderDao;
+
+    @Autowired
+    ManagerDao managerDao;
+
 
     @PostMapping("createSlot")
     public ResponseEntity<String> createSlot(@RequestParam String date,@RequestParam String time,@RequestParam Long serviceid){
@@ -88,6 +93,51 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("login")
+    public ResponseEntity<String> checkAndGetIn(@RequestBody LoginUser loginUser){
+    try {
+        List<LoginUser> result;
+        assert loginUser.getRole() != null;
+        if (loginUser.getRole().equals(1L)) {
+//            CHECK IN WEBSITE_USER
+            result = userDao.getWUCredentials(loginUser);
+
+        } else if (loginUser.getRole().equals(2L)) {
+//            CHECK IN SERVICE_PROVIDER
+            result = serviceProviderDao.getProviderCredentials(loginUser);
+
+        } else if (loginUser.getRole().equals(3L)) {
+//            CHECK IN MANAGER TABLE
+            result = managerDao.getManagerCredentials(loginUser);
+
+        } else {
+//            CHECK IN ADMIN TABLE
+            result = userDao.getAdminCredentials(loginUser);
+
+        }
+
+        if(result.isEmpty()){
+            return new ResponseEntity<>("USER NOT FOUND",HttpStatus.NOT_FOUND);
+        }else{
+            if(result.get(0).getPassword().equals(loginUser.getPassword())){
+                return new ResponseEntity<>("Welcome Back",HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Wrong Password",HttpStatus.EXPECTATION_FAILED);
+            }
+
+        }
+
+
+
+    }catch (Exception e){
+        System.out.println(e.toString());
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    }
+
+
 }
 
 

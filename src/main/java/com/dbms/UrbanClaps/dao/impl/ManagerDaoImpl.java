@@ -1,6 +1,7 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.ManagerDao;
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.Manager;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,17 @@ public class ManagerDaoImpl implements ManagerDao {
         List<Manager> result  = jdbcTemplate.query(
                 "SELECT * FROM manager",
                 new ManagerRowMapper()
+        );
+        return result;
+    }
+
+    @Override
+    public List<LoginUser> getManagerCredentials(LoginUser loginUser) {
+        String emailId = loginUser.getUsername();
+        List<LoginUser> result = jdbcTemplate.query("select manager_email_id as username,manager_password as password from manager \n" +
+                        "where manager_email_id = ?",
+                new UserDaoImpl.LoginWURowMapper(),
+                emailId
         );
         return result;
     }

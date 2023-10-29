@@ -1,6 +1,7 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.ServiceProviderDao;
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,17 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
     @Override
     public void editDetails(ServiceProvider serviceProvider) {
 
+    }
+
+    @Override
+    public List<LoginUser> getProviderCredentials(LoginUser loginUser) {
+        String emailId = loginUser.getUsername();
+        List<LoginUser> result = jdbcTemplate.query("select provider_email_id as username,provider_password as password from service_provider \n" +
+                        "where provider_email_id = ?",
+                new UserDaoImpl.LoginWURowMapper(),
+                emailId
+        );
+        return result;
     }
 
     public static class ServiceProviderRowMapper implements RowMapper<ServiceProvider> {

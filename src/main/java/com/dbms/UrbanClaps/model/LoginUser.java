@@ -1,5 +1,6 @@
 package com.dbms.UrbanClaps.model;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,9 @@ public class LoginUser {
 
     private String username;
     private String password;
-    private String role;
+
+    @Nullable
+    private Long role;
+
 
 }

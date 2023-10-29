@@ -1,10 +1,13 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.UserDao;
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import com.dbms.UrbanClaps.model.User;
 import com.dbms.UrbanClaps.model.User;
+import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -74,6 +77,28 @@ public class UserDaoImpl implements UserDao {
 
     }
 
+    @Override
+    public List<LoginUser> getWUCredentials(LoginUser loginUser) {
+        String emailId = loginUser.getUsername();
+        List<LoginUser> result = jdbcTemplate.query("select user_email_id as username,user_password as password from website_user \n" +
+                        "where user_email_id = ?",
+                new LoginWURowMapper(),
+                emailId
+        );
+        return result;
+    }
+
+    @Override
+    public List<LoginUser> getAdminCredentials(LoginUser loginUser) {
+        String emailId = loginUser.getUsername();
+        List<LoginUser> result = jdbcTemplate.query("select admin_email_id as username,admin_password as password from website_admin \n" +
+                        "where admin_email_id = ?",
+                new LoginWURowMapper(),
+                emailId
+        );
+        return result;
+    }
+
     public static class UserRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -91,5 +116,17 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+
+
+    public static class LoginWURowMapper implements RowMapper<LoginUser> {
+        @Override
+        public LoginUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return LoginUser.builder()
+                    .username(rs.getString("username"))
+                    .password(rs.getString("password"))
+                    .role(null)
+                    .build();
+        }
+    }
 
 }

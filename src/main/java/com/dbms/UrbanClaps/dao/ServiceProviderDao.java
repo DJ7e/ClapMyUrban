@@ -1,5 +1,6 @@
 package com.dbms.UrbanClaps.dao;
 
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.http.ResponseEntity;
@@ -22,4 +23,6 @@ public interface ServiceProviderDao {
     List<ServiceProvider> updateVerifyStatus(Long id);
 
     void editDetails(ServiceProvider serviceProvider);
+
+    List<LoginUser> getProviderCredentials(LoginUser loginUser);
 }
