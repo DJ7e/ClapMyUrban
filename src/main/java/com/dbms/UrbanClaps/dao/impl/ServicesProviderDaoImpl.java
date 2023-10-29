@@ -128,4 +128,5 @@ public class ServicesProviderDaoImpl implements ServiceProviderDao {
                     .category(rs.getLong("provider_category"))
                     .build();
         }
-    }}
+    }
+}

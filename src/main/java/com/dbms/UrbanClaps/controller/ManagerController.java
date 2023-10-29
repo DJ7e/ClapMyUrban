@@ -18,6 +18,8 @@ public class ManagerController {
     @Autowired
     ServiceProviderDao serviceProviderDao;
 
+
+
     @PatchMapping("{id}/verified")
     public ResponseEntity<List<ServiceProvider>> updateVerifyStatus(@PathVariable Long id) {
         try{

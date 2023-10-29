@@ -21,6 +21,7 @@ public class User {
     private String address;
     private String userPhoto;
 
+
     public User(String user_fname, String user_mname, String user_lname, String user_phone_number, String user_email_id, String user_password, String user_address, String user_photo) {
         this.firstName = user_fname;
         this.middleName = user_mname;
