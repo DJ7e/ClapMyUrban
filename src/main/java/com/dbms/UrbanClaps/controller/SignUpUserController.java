@@ -2,13 +2,16 @@ package com.dbms.UrbanClaps.controller;
 
 
 import com.dbms.UrbanClaps.dao.UserDao;
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "signup")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class SignUpUserController {
 
     @Autowired
@@ -33,6 +36,14 @@ public class SignUpUserController {
                 .userPhoto(user.getUserPhoto())
                 .build();
         System.out.println(obj.toString());
+        if(!userDao.getWUCredentials(LoginUser.builder()
+                .username(obj.getEmailId())
+                .password(obj.getPassword())
+                .role(null)
+                .build()
+        ).isEmpty()){
+            return new ResponseEntity<>("THIS EMAIL ID IS ALREADY IN USE", HttpStatus.BAD_REQUEST);
+        }
         return userDao.createUser(obj);
     }
 

@@ -1,13 +1,16 @@
 package com.dbms.UrbanClaps.controller;
 
 import com.dbms.UrbanClaps.dao.ServiceProviderDao;
+import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "signup")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class SignUpProviderController {
 
     @Autowired
@@ -40,6 +43,18 @@ public class SignUpProviderController {
                 .build();
         System.out.println(sp.toString());
         System.out.println(obj.toString());
+
+        if(!serviceProviderDao.getProviderCredentials(LoginUser.builder()
+                        .username(obj.getEmailId())
+                        .password(obj.getPassword())
+                        .role(null)
+                        .build()
+        ).isEmpty()){
+            return new ResponseEntity<>("THIS EMAIL ID IS ALREADY IN USE", HttpStatus.BAD_REQUEST);
+        }
+
+
+
         return serviceProviderDao.createProvider(obj);
     }
 

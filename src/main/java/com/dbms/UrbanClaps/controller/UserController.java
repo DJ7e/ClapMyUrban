@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "user")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class UserController {
 
     @Autowired
@@ -123,9 +124,8 @@ public class UserController {
             if(result.get(0).getPassword().equals(loginUser.getPassword())){
                 return new ResponseEntity<>("Welcome Back",HttpStatus.OK);
             }else{
-                return new ResponseEntity<>("Wrong Password",HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>("WRONG PASSWORD",HttpStatus.EXPECTATION_FAILED);
             }
-
         }
 
 
