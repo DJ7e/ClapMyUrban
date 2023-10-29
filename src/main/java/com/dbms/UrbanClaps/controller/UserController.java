@@ -1,10 +1,10 @@
 package com.dbms.UrbanClaps.controller;
 
+import ch.qos.logback.core.joran.sanity.Pair;
+import com.dbms.UrbanClaps.config.AuthenticationService;
 import com.dbms.UrbanClaps.dao.*;
-import com.dbms.UrbanClaps.model.LoginUser;
-import com.dbms.UrbanClaps.model.Orders;
-import com.dbms.UrbanClaps.model.ServiceProvider;
-import com.dbms.UrbanClaps.model.Slot;
+import com.dbms.UrbanClaps.model.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,18 +36,22 @@ public class UserController {
     @Autowired
     ManagerDao managerDao;
 
+    @Autowired
+    AuthenticationService authenticationService;
 
     @PostMapping("createSlot")
-    public ResponseEntity<String> createSlot(@RequestParam String date,@RequestParam String time,@RequestParam Long serviceid){
-        try{
+    public @ResponseBody ResponseEntity<String> createSlot(@RequestParam String date, @RequestParam String time, @RequestParam Long serviceid) {
+
+//        USER Sign IN REQD
+        try {
             Long userid = (long) 5;
 
-            List<Long> cur = slotDoa.findFreeProvidersGivenSlot(date,time,serviceid);
-            if(cur == null){
+            List<Long> cur = slotDoa.findFreeProvidersGivenSlot(date, time, serviceid);
+            if (cur == null) {
                 return new ResponseEntity<>("No Provider Avaliable at this slot\n" +
                         "Please Select different Slot"
-                        ,HttpStatus.NO_CONTENT);
-            }else{
+                        , HttpStatus.NO_CONTENT);
+            } else {
                 Slot slot = Slot.builder()
                         .user(userid)
                         .id(0L)
@@ -59,12 +63,12 @@ public class UserController {
                 Long id = slotDoa.createNewSlot(slot);
                 slot.setId(id);
                 int a = orderDao.createOrder(slot);
-                if(a == 0){
-                    return new ResponseEntity<>("Order cannot be created",HttpStatus.INTERNAL_SERVER_ERROR);
+                if (a == 0) {
+                    return new ResponseEntity<>("Order cannot be created", HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                return new ResponseEntity<>("Slot and Order Created",HttpStatus.OK);
+                return new ResponseEntity<>("Slot and Order Created", HttpStatus.OK);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
 
             e
@@ -76,6 +80,8 @@ public class UserController {
 
     @PatchMapping("{orderId}/done")
     public ResponseEntity<String> updateOrderStatus(@PathVariable Long orderId) {
+
+        //        SERVICE PROVIDER Sign IN REQD
         try {
             if (orderId == null)
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -87,7 +93,7 @@ public class UserController {
             } else {
                 int obj = orderDao.updateOrderStatus(orderId);
 //                System.out.println(obj.toString());
-                return new ResponseEntity<>("Updated Order Id - "+obj, HttpStatus.OK);
+                return new ResponseEntity<>("Updated Order Id - " + obj, HttpStatus.OK);
             }
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -95,45 +101,76 @@ public class UserController {
         }
     }
 
+
     @PostMapping("login")
-    public ResponseEntity<String> checkAndGetIn(@RequestBody LoginUser loginUser){
-    try {
-        List<LoginUser> result;
-        assert loginUser.getRole() != null;
-        if (loginUser.getRole().equals(1L)) {
+    public ResponseEntity<String> checkAndGetIn(@RequestBody LoginUser loginUser, HttpSession session) {
+
+        if(authenticationService.isAuthenticated(session)){
+            return new ResponseEntity<>("ALREADY LOGGED IN",HttpStatus.OK);
+        }
+
+
+        try {
+            List<LoginUser> result;
+            assert loginUser.getRole() != null;
+            if (loginUser.getRole().equals(1L)) {
 //            CHECK IN WEBSITE_USER
-            result = userDao.getWUCredentials(loginUser);
+                result = userDao.getWUCredentials(loginUser);
 
-        } else if (loginUser.getRole().equals(2L)) {
+            } else if (loginUser.getRole().equals(2L)) {
 //            CHECK IN SERVICE_PROVIDER
-            result = serviceProviderDao.getProviderCredentials(loginUser);
+                result = serviceProviderDao.getProviderCredentials(loginUser);
 
-        } else if (loginUser.getRole().equals(3L)) {
+            } else if (loginUser.getRole().equals(3L)) {
 //            CHECK IN MANAGER TABLE
-            result = managerDao.getManagerCredentials(loginUser);
+                result = managerDao.getManagerCredentials(loginUser);
 
-        } else {
+            } else {
 //            CHECK IN ADMIN TABLE
-            result = userDao.getAdminCredentials(loginUser);
+                result = userDao.getAdminCredentials(loginUser);
 
-        }
-
-        if(result.isEmpty()){
-            return new ResponseEntity<>("USER NOT FOUND",HttpStatus.NOT_FOUND);
-        }else{
-            if(result.get(0).getPassword().equals(loginUser.getPassword())){
-                return new ResponseEntity<>("Welcome Back",HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("WRONG PASSWORD",HttpStatus.EXPECTATION_FAILED);
             }
+            if (result.isEmpty()) {
+                return new ResponseEntity<>("USER NOT FOUND", HttpStatus.NOT_FOUND);
+            } else {
+                if (result.get(0).getPassword().equals(loginUser.getPassword())) {
+                    User myUser = userDao.getUserByUsernameAKAEmailId(loginUser.getUsername());
+                    authenticationService.loginUser(session, myUser.getUserId(), loginUser.getRole());
+                    return new ResponseEntity<>("Welcome Back", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("WRONG PASSWORD", HttpStatus.EXPECTATION_FAILED);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-
-
-    }catch (Exception e){
-        System.out.println(e.toString());
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+    @GetMapping("session1")
+    public Object sessionInfo(HttpSession session){
+        Object longLongPair = authenticationService.getCurrentUser(session);
+        return longLongPair;
+    }
+
+
+
+    @GetMapping("session2")
+    public Object sessionInfo2(HttpSession session){
+        Object longLongPair = authenticationService.getCurrentRole(session);
+        return longLongPair;
+    }
+    @PostMapping("logout")
+    public ResponseEntity<String> logoutBhai(HttpSession session){
+
+        if(!authenticationService.isAuthenticated(session)){
+            return new ResponseEntity<>("Can't Logout Because Not Logged In",HttpStatus.OK);
+        }else {
+            authenticationService.logoutUser(session);
+            return new ResponseEntity<>("Succesfully Signed Out",HttpStatus.OK);
+        }
 
     }
 
