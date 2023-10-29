@@ -3,9 +3,11 @@ package com.dbms.UrbanClaps.dao;
 import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SlotDoa {
-    Long findFreeProvidersGivenSlot(String date, String time, Long serviceid);
+    List<Long> findFreeProvidersGivenSlot(String date, String time, Long serviceid);
 
-    void createNewSlot(Slot slot);
+    Long createNewSlot(Slot slot);
 }

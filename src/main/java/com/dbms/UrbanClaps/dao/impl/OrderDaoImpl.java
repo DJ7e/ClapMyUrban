@@ -1,8 +1,9 @@
 package com.dbms.UrbanClaps.dao.impl;
 
+import com.dbms.UrbanClaps.config.Constants;
 import com.dbms.UrbanClaps.dao.OrderDao;
 import com.dbms.UrbanClaps.model.Orders;
-import com.dbms.UrbanClaps.model.ServiceProvider;
+import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Component
@@ -17,6 +20,9 @@ public class OrderDaoImpl implements OrderDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    Constants constants;
 
     @Override
     public List<Orders> getOrders(Long id) {
@@ -28,6 +34,33 @@ public class OrderDaoImpl implements OrderDao {
                 id
         );
         return result;
+    }
+
+    @Override
+    public int createOrder(Slot slot) {
+        String localTime = String.valueOf(LocalTime.now());
+        String localDate = String.valueOf(LocalDate.now());
+        /*Change format*/
+        Orders order = Orders
+                .builder()
+                .id(null)
+                .slot(slot.getId())
+                .status("PENDING")
+                .bookedDate(localDate)
+                .bookedTime(localTime)
+                .build();
+        System.out.println(order);
+        int x = jdbcTemplate.update(
+                "INSERT INTO orders (order_booked_time, order_booked_date,  order_status, order_slot)\n" +
+                        "VALUES (?,?,?,?)",
+                order.getBookedTime(),
+                order.getBookedDate(),
+                order.getStatus(),
+                order.getSlot()
+        );
+
+        return x;
+
     }
 
     public static class OrderRowMapper implements RowMapper<Orders> {

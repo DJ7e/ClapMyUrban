@@ -17,4 +17,11 @@ public class Orders {
     private String bookedDate;
     private String status;
     private Long slot;
+
+    public Orders(String bookedTime, String bookedDate, String status, Long slot) {
+        this.bookedTime = bookedTime;
+        this.bookedDate = bookedDate;
+        this.status = status;
+        this.slot = slot;
+    }
 }
