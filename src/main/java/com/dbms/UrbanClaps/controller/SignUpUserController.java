@@ -1,12 +1,14 @@
 package com.dbms.UrbanClaps.controller;
 
 
+import com.dbms.UrbanClaps.config.SecurityConfig;
 import com.dbms.UrbanClaps.dao.UserDao;
 import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +18,8 @@ public class SignUpUserController {
 
     @Autowired
     UserDao userDao;
+    @Autowired
+    SecurityConfig securityConfig;
 
     @GetMapping()
     public String signupUserPage(){
@@ -31,7 +35,7 @@ public class SignUpUserController {
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .emailId(user.getEmailId())
-                .password(user.getPassword())
+                .password(securityConfig.passwordEncoder().encode(user.getPassword()))
                 .address(user.getAddress())
                 .userPhoto(user.getUserPhoto())
                 .build();

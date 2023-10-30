@@ -2,6 +2,7 @@ package com.dbms.UrbanClaps.controller;
 
 import ch.qos.logback.core.joran.sanity.Pair;
 import com.dbms.UrbanClaps.config.AuthenticationService;
+import com.dbms.UrbanClaps.config.SecurityConfig;
 import com.dbms.UrbanClaps.dao.*;
 import com.dbms.UrbanClaps.model.*;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +33,9 @@ public class UserController {
     OrderDao orderDao;
     @Autowired
     ServiceProviderDao serviceProviderDao;
+
+    @Autowired
+    SecurityConfig securityConfig;
 
     @Autowired
     ManagerDao managerDao;
@@ -108,8 +112,6 @@ public class UserController {
         if(authenticationService.isAuthenticated(session)){
             return new ResponseEntity<>("ALREADY LOGGED IN",HttpStatus.OK);
         }
-
-
         try {
             List<LoginUser> result;
             assert loginUser.getRole() != null;
@@ -133,11 +135,15 @@ public class UserController {
             if (result.isEmpty()) {
                 return new ResponseEntity<>("USER NOT FOUND", HttpStatus.NOT_FOUND);
             } else {
-                if (result.get(0).getPassword().equals(loginUser.getPassword())) {
+                String toCheckAgainst = result.get(0).getPassword();
+                String given = loginUser.getPassword();
+                System.out.println(toCheckAgainst +" v/s "+ result.get(0).getPassword());
+                if (securityConfig.passwordEncoder().matches(given, toCheckAgainst)) {
                     User myUser = userDao.getUserByUsernameAKAEmailId(loginUser.getUsername());
                     authenticationService.loginUser(session, myUser.getUserId(), loginUser.getRole());
                     return new ResponseEntity<>("Welcome Back", HttpStatus.OK);
                 } else {
+
                     return new ResponseEntity<>("WRONG PASSWORD", HttpStatus.EXPECTATION_FAILED);
                 }
             }
