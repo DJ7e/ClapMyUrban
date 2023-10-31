@@ -1,5 +1,6 @@
 package com.dbms.UrbanClaps.dao;
 
+import com.dbms.UrbanClaps.model.NewOrderAPI;
 import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,6 @@ public interface SlotDoa {
     Long createNewSlot(Slot slot);
 
     List<Slot> getSlotByID(Long id);
+
+    List<NewOrderAPI> getOrderBysome(Long providerId);
 }

@@ -132,15 +132,41 @@ public class UserController {
                 result = userDao.getAdminCredentials(loginUser);
 
             }
+            System.out.println("result = " + result.toString());
             if (result.isEmpty()) {
                 return new ResponseEntity<>("USER NOT FOUND", HttpStatus.NOT_FOUND);
             } else {
                 String toCheckAgainst = result.get(0).getPassword();
                 String given = loginUser.getPassword();
-                System.out.println(toCheckAgainst +" v/s "+ result.get(0).getPassword());
+                System.out.println(toCheckAgainst +" v/s "+ given);
                 if (securityConfig.passwordEncoder().matches(given, toCheckAgainst)) {
-                    User myUser = userDao.getUserByUsernameAKAEmailId(loginUser.getUsername());
-                    authenticationService.loginUser(session, myUser.getUserId(), loginUser.getRole());
+                    System.out.println("holla bich"+loginUser.toString());
+
+                    if (loginUser.getRole().equals(1L)) {
+                    //            CHECK IN WEBSITE_USER
+                        User myUser = userDao.getUserByUsernameAKAEmailId(loginUser.getUsername());
+                        System.out.println("holla bich");
+                        authenticationService.loginUser(session, myUser.getUserId(), loginUser.getRole());
+                    } else if (loginUser.getRole().equals(2L)) {
+                    //            CHECK IN SERVICE_PROVIDER
+                        ServiceProvider myUser = userDao.getProviderByUsernameAKAEmailId(loginUser.getUsername());
+                        System.out.println("holla bich");
+                        authenticationService.loginUser(session, myUser.getId(), loginUser.getRole());
+
+                    } else if (loginUser.getRole().equals(3L)) {
+                    //            CHECK IN MANAGER TABLE
+                        Manager myUser = userDao.getManagerByUsernameAKAEmailId(loginUser.getUsername());
+                        System.out.println("holla bich");
+                        authenticationService.loginUser(session, myUser.getId(), loginUser.getRole());
+
+                    } else {
+                    //            CHECK IN ADMIN TABLE
+                        Admin myUser = userDao.getAdminByUsernameAKAEmailId(loginUser.getUsername());
+                        System.out.println("holla bich");
+                        authenticationService.loginUser(session, myUser.getId(), loginUser.getRole());
+
+                    }
+
                     return new ResponseEntity<>("Welcome Back", HttpStatus.OK);
                 } else {
 
@@ -149,6 +175,7 @@ public class UserController {
             }
         } catch (Exception e) {
             System.out.println(e.toString());
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -171,10 +198,12 @@ public class UserController {
     @PostMapping("logout")
     public ResponseEntity<String> logoutBhai(HttpSession session){
 
+
         if(!authenticationService.isAuthenticated(session)){
             return new ResponseEntity<>("Can't Logout Because Not Logged In",HttpStatus.OK);
         }else {
             authenticationService.logoutUser(session);
+            System.out.println(authenticationService.isAuthenticated(session) + authenticationService.getCurrentRole(session) +authenticationService.getCurrentUser(session));
             return new ResponseEntity<>("Succesfully Signed Out",HttpStatus.OK);
         }
 

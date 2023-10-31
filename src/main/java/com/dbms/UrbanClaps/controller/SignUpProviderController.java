@@ -1,5 +1,6 @@
 package com.dbms.UrbanClaps.controller;
 
+import com.dbms.UrbanClaps.config.SecurityConfig;
 import com.dbms.UrbanClaps.dao.ServiceProviderDao;
 import com.dbms.UrbanClaps.model.LoginUser;
 import com.dbms.UrbanClaps.model.ServiceProvider;
@@ -16,6 +17,8 @@ public class SignUpProviderController {
     @Autowired
     ServiceProviderDao serviceProviderDao;
 
+    @Autowired
+    SecurityConfig securityConfig;
 //    @GetMapping()
 //    public String signupProviderPage(){
 //        return "Ye faltu hai";
@@ -30,7 +33,7 @@ public class SignUpProviderController {
                 .lastName(sp.getLastName())
                 .phoneNo(sp.getPhoneNo())
                 .emailId(sp.getEmailId())
-                .password(sp.getPassword())
+                .password(securityConfig.passwordEncoder().encode(sp.getPassword()))
                 .address(sp.getAddress())
                 .description(sp.getDescription())
                 .photo(sp.getPhoto())

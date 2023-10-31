@@ -1,16 +1,11 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.UserDao;
-import com.dbms.UrbanClaps.model.LoginUser;
-import com.dbms.UrbanClaps.model.ServicesProvided;
+import com.dbms.UrbanClaps.model.*;
 import com.dbms.UrbanClaps.model.User;
-import com.dbms.UrbanClaps.model.User;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,6 +19,9 @@ public class UserDaoImpl implements UserDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    ServicesProviderDaoImpl servicesProviderDao;
 
     @Override
     public ResponseEntity<String> createUser(User obj) {
@@ -73,10 +71,67 @@ public class UserDaoImpl implements UserDao {
                 new UserRowMapper(),
                 username
         );
+        System.out.println("hola" + result.toString());
+        return result.get(0);
+
+    }
+    @Override
+    public ServiceProvider getProviderByUsernameAKAEmailId(String username) {
+        List<ServiceProvider> result  = jdbcTemplate.query(
+                "SELECT * FROM service_provider WHERE provider_email_id = ?",
+                new ServicesProviderDaoImpl.ServiceProviderRowMapper(),
+                username
+        );
+        System.out.println("hola" + result.toString());
         return result.get(0);
 
     }
 
+    @Autowired
+    ManagerDaoImpl managerDao;
+
+    @Override
+    public Manager getManagerByUsernameAKAEmailId(String username) {
+        List<Manager> result  = jdbcTemplate.query(
+                "SELECT * FROM manager WHERE manager_email_id = ?",
+                new ManagerDaoImpl.ManagerRowMapper(),
+                username
+        );
+        System.out.println("hola" + result.toString());
+        return result.get(0);
+
+    }
+
+
+
+    @Override
+    public Admin getAdminByUsernameAKAEmailId(String username) {
+        List<Admin> result  = jdbcTemplate.query(
+                "SELECT * FROM manager WHERE manager_email_id = ?",
+                new AdminRowMapper(),
+                username
+        );
+        System.out.println("hola" + result.toString());
+        return result.get(0);
+    }
+
+
+    public static class AdminRowMapper implements RowMapper<Admin> {
+        @Override
+        public Admin mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return Admin.builder()
+                    .id(rs.getLong("admin_id"))
+                    .firstName(rs.getString("admin_fname"))
+                    .middleName(rs.getString("admin_mname"))
+                    .lastName(rs.getString("admin_lname"))
+                    .phoneNo(rs.getString("admin_phone_number"))
+                    .emailId(rs.getString("admin_email_id"))
+                    .password(rs.getString("admin_password"))
+                    .address(rs.getString("admin_address"))
+                    .photo(rs.getString("admin_photo"))
+                    .build();
+        }
+    }
     @Override
     public List<LoginUser> getWUCredentials(LoginUser loginUser) {
         String emailId = loginUser.getUsername();

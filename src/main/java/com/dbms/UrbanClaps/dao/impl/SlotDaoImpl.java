@@ -1,6 +1,7 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.SlotDoa;
+import com.dbms.UrbanClaps.model.NewOrderAPI;
 import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,19 @@ public class SlotDaoImpl implements SlotDoa {
         );
         return result;
 
+    }
+
+    @Override
+    public List<NewOrderAPI> getOrderBysome(Long providerId) {
+
+        List<NewOrderAPI> result = jdbcTemplate.query(
+                "select s.slot_id,s.slot_service,s.slot_user,s.slot_time,s.slot_date \n" +
+                        "from slot s,orders o \n" +
+                        "where s.slot_id = o.order_slot AND lower(o.order_status) = 'pending' AND s.slot_provider = ?",
+                new BeanPropertyRowMapper<NewOrderAPI>(),
+                providerId
+        );
+        return result;
     }
 
     @Override

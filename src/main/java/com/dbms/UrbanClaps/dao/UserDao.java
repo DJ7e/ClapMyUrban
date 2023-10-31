@@ -1,7 +1,6 @@
 package com.dbms.UrbanClaps.dao;
 
-import com.dbms.UrbanClaps.model.LoginUser;
-import com.dbms.UrbanClaps.model.User;
+import com.dbms.UrbanClaps.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +21,10 @@ public interface UserDao {
     List<LoginUser> getWUCredentials(LoginUser loginUser);
 
     List<LoginUser> getAdminCredentials(LoginUser loginUser);
+
+    ServiceProvider getProviderByUsernameAKAEmailId(String username);
+
+    Manager getManagerByUsernameAKAEmailId(String username);
+
+    Admin getAdminByUsernameAKAEmailId(String username);
 }
