@@ -2,12 +2,9 @@ package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.SlotDoa;
 import com.dbms.UrbanClaps.model.NewOrderAPI;
-import com.dbms.UrbanClaps.model.ServiceProvider;
 import com.dbms.UrbanClaps.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -65,13 +62,13 @@ public class SlotDaoImpl implements SlotDoa {
     }
 
     @Override
-    public List<NewOrderAPI> getOrderBysome(Long providerId) {
+    public List<Slot> getOrderBysome(Long providerId) {
 
-        List<NewOrderAPI> result = jdbcTemplate.query(
-                "select s.slot_id,s.slot_service,s.slot_user,s.slot_time,s.slot_date \n" +
+        List<Slot> result = jdbcTemplate.query(
+                "select s.slot_id,s.slot_service,s.slot_user,s.slot_time,s.slot_date,s.slot_provider \n" +
                         "from slot s,orders o \n" +
                         "where s.slot_id = o.order_slot AND lower(o.order_status) = 'pending' AND s.slot_provider = ?",
-                new BeanPropertyRowMapper<NewOrderAPI>(),
+                new SlotRowMapper(),
                 providerId
         );
         return result;

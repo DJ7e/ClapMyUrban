@@ -82,7 +82,7 @@ public class ServiceController {
 
         if (authenticationService.isAuthenticated(session) && (authenticationService.getCurrentRole(session).equals("4")||authenticationService.getCurrentRole(session).equals("3"))) {
 
-            //        MANAGER AND ADMIN Sign IN REQD
+            //        MANAGER AND ADMIN Sign IN REQD2q
             try {
                 List<ServicesProvided> services = new ArrayList<ServicesProvided>();
                 if (name == null)

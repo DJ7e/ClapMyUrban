@@ -1,11 +1,13 @@
 package com.dbms.UrbanClaps.dao.impl;
 
 import com.dbms.UrbanClaps.dao.ServicesProvidedDao;
+import com.dbms.UrbanClaps.model.Manager;
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,6 +71,23 @@ public class ServicesProvidedDaoImpl implements ServicesProvidedDao {
         return "BHag";
     }
 
+    @Override
+    public void addService(ServicesProvided service) {
+        jdbcTemplate.update(
+                " INSERT INTO service (service_name, service_price, service_description, service_category) VALUES (?, ?, ?, ?)",
+                service.getName(),
+                service.getPrice(),
+                service.getDescription(),
+                service.getCategory()
+        );
+    }
+
+    @Override
+    public void deleteService(Long serviceId) {
+        jdbcTemplate.update(
+                "DELETE FROM service WHERE service_id = ?",
+        serviceId);
+    }
 
     public static class ServicesRowMapper implements RowMapper<ServicesProvided> {
         @Override

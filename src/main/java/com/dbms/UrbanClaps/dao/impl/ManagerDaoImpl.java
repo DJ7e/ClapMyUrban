@@ -39,6 +39,34 @@ public class ManagerDaoImpl implements ManagerDao {
         return result;
     }
 
+    @Override
+    public void addManager(Manager manager) {
+        jdbcTemplate.update(
+                "INSERT INTO manager " +
+                        "(manager_fname, manager_mname, manager_lname, manager_phone_number," +
+                        " manager_email_id, manager_password, manager_address" +
+                        ", manager_description, manager_photo)\n" +
+                        "VALUES " +
+                        "(?, ?, ?, ?, ?, ?, ?, ?, ?)\n",
+                manager.getFirstName(),
+                manager.getMiddleName(),
+                manager.getLastName(),
+                manager.getPhoneNo(),
+                manager.getEmailId(),
+                manager.getPassword(),
+                manager.getAddress(),
+                manager.getDescription(),
+                manager.getPhoto()
+        );
+    }
+
+    @Override
+    public void deleteManager(Long managerId) {
+        jdbcTemplate.update(
+                "DELETE FROM manager WHERE manager_id = ?",
+                managerId);
+    }
+
     public static class ManagerRowMapper implements RowMapper<Manager> {
         @Override
         public Manager mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -82,7 +82,7 @@ public class UserController {
         }
     }
 
-    @PatchMapping("{orderId}/done")
+    @PutMapping("{orderId}/done")
     public ResponseEntity<String> updateOrderStatus(@PathVariable Long orderId) {
 
         //        SERVICE PROVIDER Sign IN REQD

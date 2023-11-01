@@ -33,13 +33,13 @@ public class ProviderController {
         }
     }
 
-    @PostMapping("lodabc")
-    public ResponseEntity<List<NewOrderAPI>> kuchNewApi(@RequestParam Long providerId){
+    @GetMapping("order")
+    public ResponseEntity<List<Slot>> kuchNewApi(@RequestParam Long providerId){
         try {
             if(providerId == null)
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             else{
-                List<NewOrderAPI> check = slotDoa.getOrderBysome(providerId);
+                List<Slot> check = slotDoa.getOrderBysome(providerId);
                 return new ResponseEntity<>(check,HttpStatus.OK);
             }
         } catch (Exception e) {

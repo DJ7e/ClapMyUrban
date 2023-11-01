@@ -2,6 +2,7 @@ package com.dbms.UrbanClaps.dao;
 
 import com.dbms.UrbanClaps.model.ServicesProvided;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,4 +20,8 @@ public interface ServicesProvidedDao {
 
 
     String changeName(Long id, String name);
+
+    void addService(ServicesProvided service);
+
+    void deleteService(Long serviceId);
 }

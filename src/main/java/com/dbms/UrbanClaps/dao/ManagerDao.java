@@ -14,4 +14,8 @@ public interface ManagerDao {
     List<Manager> getAllManager();
 
     List<LoginUser> getManagerCredentials(LoginUser loginUser);
+
+    void addManager(Manager manager);
+
+    void deleteManager(Long managerId);
 }

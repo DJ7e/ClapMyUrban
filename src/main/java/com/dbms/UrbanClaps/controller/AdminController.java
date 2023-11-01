@@ -2,6 +2,7 @@ package com.dbms.UrbanClaps.controller;
 
 import com.dbms.UrbanClaps.dao.ManagerDao;
 import com.dbms.UrbanClaps.dao.ServiceProviderDao;
+import com.dbms.UrbanClaps.dao.ServicesProvidedDao;
 import com.dbms.UrbanClaps.dao.UserDao;
 import com.dbms.UrbanClaps.model.Manager;
 import com.dbms.UrbanClaps.model.ServiceProvider;
@@ -10,6 +11,7 @@ import com.dbms.UrbanClaps.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +27,9 @@ public class AdminController {
 
     @Autowired
     ServiceProviderDao serviceProviderDao;
+
+    @Autowired
+    ServicesProvidedDao servicesProvidedDao;
 
     @Autowired
     ManagerDao managerDao;
@@ -83,5 +88,53 @@ public class AdminController {
         }
     }
 
+    @PostMapping("addManager")
+    public ResponseEntity<String> addManager(@RequestBody Manager manager){
+        try{
+            managerDao.addManager(manager);
+            return new ResponseEntity<>("Manager Added SuccesFully",HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e.toString());
+            e.printStackTrace();
+            return new ResponseEntity<>("SomeThing Wrong Occured",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("addService")
+    public ResponseEntity<String> addService(@RequestBody ServicesProvided service){
+        try{
+            servicesProvidedDao.addService(service);
+            return new ResponseEntity<>("Service Added SuccesFully",HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e.toString());
+            e.printStackTrace();
+            return new ResponseEntity<>("SomeThing Wrong Occured",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("deleteService")
+    public ResponseEntity<String> deleteService(@RequestParam Long serviceId){
+        try{
+            servicesProvidedDao.deleteService(serviceId);
+            return new ResponseEntity<>("Service Removed SuccesFully",HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e.toString());
+            e.printStackTrace();
+            return new ResponseEntity<>("SomeThing Wrong Occured",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @DeleteMapping("deleteManager")
+    public ResponseEntity<String> deleteManager(@RequestParam Long managerId){
+        try{
+            managerDao.deleteManager(managerId);
+            return new ResponseEntity<>("Manager Removed SuccesFully",HttpStatus.CREATED);
+        }catch (Exception e){
+            System.out.println(e.toString());
+            e.printStackTrace();
+            return new ResponseEntity<>("SomeThing Wrong Occured",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
